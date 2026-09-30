@@ -2,9 +2,9 @@
 
 La memoria de tu Claude Code dibujada como un cerebro 3D que piensa en vivo, y que te habla.
 
-<video src="https://github.com/daybigo/Cerebro-Jarvis/raw/main/media/cerebro-demo.mp4" controls width="100%"></video>
+https://github.com/user-attachments/assets/ff2ee8b3-0b48-4ca3-94c1-4be95b93c7d6
 
-▶️ [Ver el demo con sonido](https://github.com/daybigo/Cerebro-Jarvis/raw/main/media/cerebro-demo.mp4)
+▶️ Activa el sonido: el cerebro habla. [Descargar el demo en 1080p](https://github.com/daybigo/Cerebro-Jarvis/raw/main/media/cerebro-demo.mp4)
 
 Cada nota de memoria es una neurona. Los proyectos, las reglas, las referencias y las skills viven en distintos lóbulos. Cuando Claude lee, busca, edita o lanza agentes, lo ves recorrer el cerebro en tiempo real. Además puedes hablarle, pedirle que audite tu memoria y que la corrija.
 
