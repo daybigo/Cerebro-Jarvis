@@ -1,0 +1,13 @@
+{
+  "name": "cerebro-de-claude-demo",
+  "private": true,
+  "type": "module",
+  "description": "Graba el demo del Cerebro de Claude cuadro por cuadro (headless) y lo codifica con ffmpeg.",
+  "scripts": {
+    "foto": "node foto.mjs",
+    "grabar": "node grabar.mjs"
+  },
+  "dependencies": {
+    "puppeteer-core": "^24.0.0"
+  }
+}

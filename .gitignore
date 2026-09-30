@@ -1,0 +1,16 @@
+# claves y datos personales: nunca se suben
+.env
+.cache/
+
+# salidas del demo (contienen tu voz, tus respuestas y capturas de tus notas)
+demo/*.mp4
+demo/*.wav
+demo/voz_cache.json
+demo/*.ass
+demo/fotos/
+demo/node_modules/
+
+__pycache__/
+*.pyc
+node_modules/
+demo/*.png

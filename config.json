@@ -1,0 +1,12 @@
+{
+  "port": 7777,
+  "user_name": "",
+  "claude_dir": "~/.claude",
+  "include_skills": true,
+  "include_project_instructions": false,
+  "extra_roots": [],
+  "idle_rest_seconds": 90,
+  "idle_dream_seconds": 300,
+  "usage_days": 30,
+  "open_browser": true
+}

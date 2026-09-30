@@ -1,0 +1,4 @@
+# El cerebro funciona solo con Python 3.10+ (sin dependencias).
+# Estas dos son opcionales: voz en vivo por WebSocket con Fish Audio (sin ellas usa la API REST).
+websockets>=13
+msgpack>=1.0

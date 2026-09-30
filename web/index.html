@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cerebro de Claude</title>
+<link rel="icon" href="icon.svg">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/addons/"}}</script>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <img src="icon.svg" class="logo" alt="">
+    <div><div class="title">Cerebro de Claude</div><div class="sub" id="generated">Generado el …</div></div>
+  </div>
+  <div class="top-right">
+    <div class="pill stat"><b id="st-notes">0</b> notas</div>
+    <div class="pill stat"><b id="st-edges">0</b> conexiones</div>
+    <button class="pill stat danger" id="st-problems"><b>0</b> problemas</button>
+    <button class="pill act" id="btn-audit" title="Claude revisa tus memorias y te dice qué % están repetidas o corruptas">
+      <svg viewBox="0 0 16 16"><path d="M7 2a5 5 0 1 0 3.1 8.9l3 3 .9-.9-3-3A5 5 0 0 0 7 2zm0 1.3a3.7 3.7 0 1 1 0 7.4 3.7 3.7 0 0 1 0-7.4z"/></svg>Auditar memorias</button>
+    <button class="pill act" id="btn-improve" title="Claude corrige las memorias repetidas, rotas o viejas (con backup)">
+      <svg viewBox="0 0 16 16"><path d="M8 1l1.6 3.9L13.5 6 10.4 8.6l1 4.1L8 10.5l-3.4 2.2 1-4.1L2.5 6l3.9-1.1z"/></svg>Mejorar memoria</button>
+    <button class="pill act voice" id="btn-voice" title="Háblale al cerebro (toca para hablar)">
+      <svg viewBox="0 0 16 16"><path d="M8 1.5a2.3 2.3 0 0 0-2.3 2.3v4a2.3 2.3 0 0 0 4.6 0v-4A2.3 2.3 0 0 0 8 1.5zM4 7.5h1.2a2.8 2.8 0 0 0 5.6 0H12a4 4 0 0 1-3.4 3.9V14H7.4v-2.6A4 4 0 0 1 4 7.5z"/></svg><span id="voice-label">Voz</span></button>
+    <label class="pill toggle"><input type="checkbox" id="anim" checked><span class="sw"></span>Animaciones</label>
+    <button class="icon-btn" id="theme" title="Tema claro / oscuro">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><g stroke-width="1.8" stroke-linecap="round"><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></g></svg>
+    </button>
+  </div>
+</header>
+
+<aside class="side">
+  <div class="search">
+    <svg viewBox="0 0 16 16"><path d="M7 2a5 5 0 1 0 3.1 8.9l3 3 .9-.9-3-3A5 5 0 0 0 7 2zm0 1.3a3.7 3.7 0 1 1 0 7.4 3.7 3.7 0 0 1 0-7.4z"/></svg>
+    <input id="q" placeholder="Busca una nota..." autocomplete="off" spellcheck="false">
+    <kbd>/</kbd>
+    <div class="results hidden" id="results"></div>
+  </div>
+  <section>
+    <div class="sec-h"><span>GRUPOS</span><span class="links"><a data-all="groups">todos</a><a data-none="groups">ninguno</a></span></div>
+    <div id="groups"></div>
+  </section>
+  <section>
+    <div class="sec-h"><span>TIPOS DE NOTA</span><span class="links"><a data-all="types">todos</a><a data-none="types">ninguno</a></span></div>
+    <div id="types"></div>
+  </section>
+  <section>
+    <div class="sec-h"><span>CONEXIONES</span><span class="links"><a data-all="etypes">todas</a><a data-none="etypes">ninguna</a></span></div>
+    <div id="etypes"></div>
+  </section>
+</aside>
+
+<main class="stage" id="stage">
+  <canvas id="gl"></canvas>
+  <div id="labels" class="labels"></div>
+  <div class="tabs">
+    <div class="seg" id="view-seg"><button data-view="grafo" class="on">Grafo</button><button data-view="lista">Lista</button></div>
+    <div class="seg" id="color-seg"><button data-color="grupos" class="on">Grupos</button><button data-color="uso">Uso</button></div>
+  </div>
+  <div id="loading" class="loading">Cargando el grafo...</div>
+  <div id="list" class="list hidden"></div>
+
+  <div class="now" id="now">
+    <div class="now-h"><span class="dot" id="conn-dot"></span><b>Ahora</b><span class="muted" id="conn-txt">conectando...</span><button id="probar">Probar</button></div>
+    <div id="now-body"><div class="empty">Todavía no hay acciones. Cuando Claude lea o edite algo, aparece acá.</div></div>
+  </div>
+
+  <div class="controls">
+    <button id="zin" title="Acercar">+</button><button id="zout" title="Alejar">−</button>
+    <button id="fit">Encuadrar</button><button id="relayout">Reacomodar</button>
+    <button id="follow" class="on"><i></i>Seguir</button>
+  </div>
+  <div class="ekg"><canvas id="ekg"></canvas><div id="mind" class="mind">conectando</div></div>
+  <div class="foot" id="foot">0 de 0 notas · 0 conexiones</div>
+  <div class="voice-bubble hidden" id="voice-bubble"></div>
+
+  <aside class="drawer hidden" id="drawer"></aside>
+  <div class="tip hidden" id="tip"></div>
+</main>
+
+<div class="modal hidden" id="modal"><div class="modal-card" id="modal-card"></div></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
